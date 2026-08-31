@@ -1,22 +1,26 @@
-// v0.3 — Identidade visual (ícone da aplicação + Look and Feel)
+// v1.0 — Lógica de autenticação (usuário e senha fixos)
 
 // Objetivo
-// Adicionar ícone próprio e dar uma aparência mais moderna
+// Fazer o botão "Entrar" realmente validar o usuário e a senha digitados, 
+// comparando com os valores fixos combinados: Usuário: root / Senha: toor.
 
 package horizonlogin;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.net.URL;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
+import java.awt.GridBagConstraints; // Define as regras de cada componente dentro do GridBagLayout (como posição X/Y, tamanho e alinhamento).
+import java.awt.GridBagLayout; // Gerenciador de layout que organiza os componentes em uma grade de linhas e colunas.
+import java.awt.Insets; // Define as margens (espaçamento externo) em pixels nas direções: superior, esquerda, inferior e direita.
+import java.awt.event.ActionEvent; // Representa o evento gerado quando uma ação ocorre (por exemplo, o clique em um botão).
+import java.awt.event.ActionListener; // Interface que detecta e responde às ações do usuário, disparando um código quando o botão é clicado.
+import javax.swing.ImageIcon; // Permite carregar imagens ou ícones do computador para exibi-los na tela (geralmente dentro de botões ou rótulos).
+import javax.swing.JButton; // O botão clicável da interface gráfica.
+import javax.swing.JFrame; // A janela principal do aplicativo (com os botões de fechar, maximizar e minimizar).
+import javax.swing.JLabel; // Um rótulo de texto ou imagem estático na tela, usado para títulos, descrições ou instruções.
+import javax.swing.JOptionPane; // Cria caixas de diálogo prontas e rápidas, como alertas de erro, avisos ou perguntas de confirmação.
+import javax.swing.JPanel; // Um painel invisível usado para agrupar e organizar outros componentes dentro da janela principal.
+import javax.swing.JPasswordField; // Um campo de texto especial para senhas, que mascara os caracteres digitados por bolinhas ou asteriscos.
+import javax.swing.JTextField; // Uma caixa de texto de linha única onde o usuário pode digitar dados convencionais (como nome de usuário ou e-mail).
+import javax.swing.UIManager; // Permite gerenciar a aparência ("Look and Feel") da interface, deixando as janelas com a cara do sistema operacional (Windows, Mac, Linux).
+import java.io.File; // Permite ao Java interagir com arquivos e pastas do computador (útil para verificar caminhos ou abrir fotos).
 
 public class HorizonLoginApp {
 
@@ -62,80 +66,96 @@ public class HorizonLoginApp {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // --- SEÇÃO DO ÍCONE DO PAINEL ---
-        
-        // Busca o arquivo da imagem dentro da pasta do projeto (pasta CF)
-        URL urlIcone = HorizonLoginApp.class.getResource("/ICONS/horizon_icon.png");
-        
-        // Transforma a imagem carregada em um objeto ImageIcon utilizável pelo Swing
-        ImageIcon icon = new ImageIcon(urlIcone);
-        
-        // Cria um rótulo (Label) contendo apenas a imagem do ícone
-        JLabel lblIconePainel = new JLabel(icon); 
-        
-        // Posiciona o ícone na primeira coluna (X = 0) e na primeira linha (Y = 0) da grade
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        
-        // Faz o ícone ocupar o espaço de 2 colunas para ficar centralizado acima dos campos
-        gbc.gridwidth = 2; 
-        
-        // Alinha o ícone exatamente no centro da célula da grade
-        gbc.anchor = GridBagConstraints.CENTER; 
-        
-        // Adiciona o ícone ao painel principal
-        painelLogin.add(lblIconePainel, gbc);
-        
-        // Também define a imagem como ícone oficial da janela (para funcionar fora do Ubuntu)
-        frame.setIconImage(icon.getImage());
+
+        File arquivoIcone = new File("ICONS/horizon_icon.png");
+
+        ImageIcon icon = null;
+        JLabel lblIconePainel = null;
+
+        if (arquivoIcone.exists()) {
+            icon = new ImageIcon(arquivoIcone.getAbsolutePath());
+            lblIconePainel = new JLabel(icon);
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 2;
+            gbc.anchor = GridBagConstraints.CENTER;
+
+            painelLogin.add(lblIconePainel, gbc);
+            frame.setIconImage(icon.getImage());
+        } else {
+            System.err.println("Imagem não encontrada em: " + arquivoIcone.getAbsolutePath());
+        }
 
         // --- SEÇÃO DOS CAMPOS DE TEXTO E BOTÕES ---
         
-        // Reseta a largura do componente para 1 coluna (os próximos elementos usam tamanho normal)
         gbc.gridwidth = 1; 
 
         // Rótulo "Usuário:"
         JLabel lblUsuario = new JLabel("Usuário:");
-        gbc.gridx = 0; // Coluna 0 (Esquerda)
-        gbc.gridy = 1; // Linha 1 (Abaixo do ícone)
-        gbc.weightx = 0.0; // ALTERADO: Coluna da esquerda não ganha peso, ficando compactada à esquerda
-        gbc.anchor = GridBagConstraints.WEST; // Garante alinhamento total à esquerda
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.WEST;
         painelLogin.add(lblUsuario, gbc);
 
         // Campo de Texto do Usuário
         JTextField txtUsuario = new JTextField(15);
-        gbc.gridx = 1; // Coluna 1 (Direita)
-        gbc.gridy = 1; // Linha 1
-        gbc.weightx = 1.0; // ALTERADO: Dá peso total à coluna da direita para "empurrar" a coluna 0 para a esquerda
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
         painelLogin.add(txtUsuario, gbc);
 
         // Rótulo "Senha:"
         JLabel lblSenha = new JLabel("Senha:");
-        gbc.gridx = 0; // Coluna 0 (Esquerda)
-        gbc.gridy = 2; // Linha 2
-        gbc.weightx = 0.0; // Compacta à esquerda
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0.0;
         gbc.anchor = GridBagConstraints.WEST;
         painelLogin.add(lblSenha, gbc);
 
         // Campo de Senha
         JPasswordField txtSenha = new JPasswordField(15);
-        gbc.gridx = 1; // Coluna 1 (Direita)
-        gbc.gridy = 2; // Linha 2
-        gbc.weightx = 1.0; // ALTERADO: Mantém o peso na coluna da direita
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.weightx = 1.0;
         painelLogin.add(txtSenha, gbc);
 
         // Botão Entrar
         JButton btnEntrar = new JButton("Entrar");
-        gbc.gridx = 1; // Coluna 1
-        gbc.gridy = 3; // Linha 3
-        gbc.weightx = 1.0; // Mantém o peso à direita
-        gbc.fill = GridBagConstraints.NONE; // ALTERADO: Evita que o botão estique e mude de tamanho
-        gbc.anchor = GridBagConstraints.WEST; // ALTERADO: Alinha o botão "Entrar" diretamente colado na esquerda do seu próprio bloco
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.WEST;
         painelLogin.add(btnEntrar, gbc);
+
+        // --- VALIDAÇÃO DE LOGIN ---
+        btnEntrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usuario = txtUsuario.getText();
+                String senha = new String(txtSenha.getPassword());
+
+                // Valida o usuário e senha informados
+                if ("root".equals(usuario) && "toor".equals(senha)) {
+                    JOptionPane.showMessageDialog(frame, 
+                            "Login realizado com sucesso!", 
+                            "Sucesso", 
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(frame, 
+                            "Usuário ou senha incorretos.", 
+                            "Erro de Autenticação", 
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         // Adiciona o painel configurado dentro da janela principal (JFrame)
         frame.add(painelLogin);
         
-        // Torna a janela visível na tela (por padrão ela inicia oculta)
+        // Torna a janela visível na tela
         frame.setVisible(true);
     }
 }
