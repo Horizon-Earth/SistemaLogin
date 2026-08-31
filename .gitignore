@@ -1,0 +1,25 @@
+# Compilação e saídas
+*.class
+*.log
+*.jar
+*.war
+*.ear
+target/
+bin/
+build/
+.gradle/
+
+# IDEs (IntelliJ, Eclipse, NetBeans)
+.idea/
+*.iml
+*.iws
+.settings/
+.classpath
+.project
+.nbworkspace/
+nbproject/
+build.xml
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
