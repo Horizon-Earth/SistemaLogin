@@ -146,8 +146,11 @@ public class LoginFrame extends JFrame {
         String senha = new String(txtSenha.getPassword());
 
         if (controller.autenticar(usuario, senha)) {
-            JOptionPane.showMessageDialog(this, "Login realizado com sucesso!",
-                    "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            // Abre a tela de painel...
+            DashboardFrame dashboard = new DashboardFrame(usuario);
+            dashboard.setVisible(true);
+            // ...e fecha a tela de login
+            this.dispose();
         } else {
             tentativasRestantes--;
 
