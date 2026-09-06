@@ -1,19 +1,24 @@
-// v1.1 - Organização em pacotes (MVC básico) + UML
-
-// Objetivo
-//separar responsabilidades em três pacotes, seguindo uma ideia simplificada do padrão MVC (Model-View-Controller):
-
 package horizonlogin;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import horizonlogin.view.LoginFrame;
+import horizonlogin.view.SplashScreen;
 
 public class HorizonLoginApp {
 
     public static void main(String[] args) {
+        aplicarLookAndFeel();
 
-        // Aplica o tema "Nimbus" para deixar os botões e campos com visual moderno
+        SplashScreen splash = new SplashScreen();
+        splash.exibirPor(2000, () -> {
+            LoginFrame tela = new LoginFrame();
+            tela.setVisible(true);
+        });
+    }
+
+    private static void aplicarLookAndFeel() {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -24,9 +29,5 @@ public class HorizonLoginApp {
         } catch (Exception e) {
             System.out.println("Não foi possível carregar o Look and Feel Nimbus.");
         }
-
-        // Inicializa e exibe a tela de login
-        LoginFrame tela = new LoginFrame();
-        tela.setVisible(true);
     }
 }
