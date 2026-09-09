@@ -1,5 +1,10 @@
 package horizonlogin.view;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -47,7 +52,6 @@ public class DashboardFrame extends JFrame {
     private JMenuBar criarMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menuAjuda = new JMenu("Sobre");
-
         JMenuItem itemSobre = new JMenuItem("Sobre o Horizon Login");
         itemSobre.addActionListener(e -> JOptionPane.showMessageDialog(
                 this,
@@ -55,9 +59,27 @@ public class DashboardFrame extends JFrame {
                 "Sobre",
                 JOptionPane.INFORMATION_MESSAGE
         ));
-
         menuAjuda.add(itemSobre);
+
+        JMenu menuGithub = new JMenu("GitHub");
+        JMenuItem itemRepo = new JMenuItem("Abrir repositório no GitHub");
+        itemRepo.addActionListener(e -> abrirLink("https://github.com/Horizon-Earth/SistemaLogin"));
+        menuGithub.add(itemRepo);
+
         menuBar.add(menuAjuda);
+        menuBar.add(menuGithub);
         return menuBar;
+    }
+
+    private void abrirLink(String url) {
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(new URI(url));
+            }
+        } catch (IOException | URISyntaxException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível abrir o link:\n" + url,
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
