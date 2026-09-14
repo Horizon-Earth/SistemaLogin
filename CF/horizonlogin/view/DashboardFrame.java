@@ -55,16 +55,16 @@ public class DashboardFrame extends JFrame {
         JMenuItem itemSobre = new JMenuItem("Sobre o Horizon Login");
         itemSobre.addActionListener(e -> JOptionPane.showMessageDialog(
                 this,
-                "Horizon Login\nProjeto de estudo em Java Swing.\nVersão atual (v3.2).",
+                "Horizon Login\nProjeto de estudo em Java Swing.\nVersão atual (v4.0).",
                 "Sobre",
                 JOptionPane.INFORMATION_MESSAGE
         ));
         menuAjuda.add(itemSobre);
 
         JMenu menuGithub = new JMenu("GitHub");
-        JMenuItem itemRepo = new JMenuItem("Abrir repositório no GitHub");
-        itemRepo.addActionListener(e -> abrirLink("https://github.com/Horizon-Earth/SistemaLogin"));
-        menuGithub.add(itemRepo);
+        JMenuItem itemGithub = new JMenuItem("Informações do GitHub");
+        itemGithub.addActionListener(e -> new GithubInfoDialog(this).setVisible(true));
+        menuGithub.add(itemGithub);
 
         menuBar.add(menuAjuda);
         menuBar.add(menuGithub);
